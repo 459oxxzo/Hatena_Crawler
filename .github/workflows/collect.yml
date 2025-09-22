@@ -1,0 +1,34 @@
+name: Collect Hatena Data
+
+on:
+  workflow_dispatch: {}
+  schedule:
+    - cron: "20 * * * *"   # 毎時:20（UTC）
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install -U pip
+          pip install -r requirements.txt
+
+      - name: Run collector
+        env:
+          SEEDS_FILE: seeds.txt
+          OUT_DIR: out
+        run: python hatena_collect.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: csv-${{ github.run_id }}
+          path: out/**/*
+          if-no-files-found: error
