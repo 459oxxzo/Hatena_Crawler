@@ -10,3 +10,22 @@ jobs:
           python-version: '3.11'
       - name: Ping
         run: echo "hello"
+      - name: Debug: list files
+        run: |
+          pwd
+          ls -la
+          echo '--- seeds.txt ---'; sed -n '1,50p' seeds.txt || true
+          echo '--- hatena_collect.py (head) ---'; sed -n '1,30p' hatena_collect.py || true
+      - name: Install deps
+        run: pip install requests
+      - name: Run collector
+        env:
+          SEEDS_FILE: seeds.txt
+          OUT_DIR: out
+        run: python hatena_collect.py
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: csv-${{ github.run_id }}
+          path: out/**/*
+          if-no-files-found: warn
