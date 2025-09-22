@@ -1,8 +1,12 @@
-      - name: Debug: list files
-        run: |
-          pwd
-          ls -la
-          echo '--- seeds.txt ---'
-          sed -n '1,50p' seeds.txt || true
-          echo '--- hatena_collect.py (head) ---'
-          sed -n '1,30p' hatena_collect.py || true
+name: Collect Hatena Data
+on: workflow_dispatch
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Ping
+        run: echo "hello"
