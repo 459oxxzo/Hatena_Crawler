@@ -1,9 +1,9 @@
 name: Collect Hatena Data
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
   schedule:
-    - cron: "20 * * * *"   # 毎時:20（UTC）
+    - cron: '20 * * * *'   # 毎時:20（UTC）
 
 jobs:
   run:
@@ -11,21 +11,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # 何があるか可視化（requirements.txt / seeds.txt の有無を確認）
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
       - name: Debug: list files
         run: |
           pwd
           ls -la
-          echo "--- seeds.txt ---"
-          sed -n '1,50p' seeds.txt || true
-          echo "--- requirements.txt ---"
-          sed -n '1,50p' requirements.txt || true
+          echo '--- seeds.txt ---'
+          sed -n '1,100p' seeds.txt || true
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      # requirements.txt を読まず、直接インストール（これで file-not-found を回避）
       - name: Install deps
         run: pip install requests
 
@@ -35,7 +32,6 @@ jobs:
           OUT_DIR: out
         run: python hatena_collect.py
 
-      # 成果物が空でも失敗にしない（デバッグ時に便利）
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
