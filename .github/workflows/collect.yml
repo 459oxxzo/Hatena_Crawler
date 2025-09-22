@@ -4,6 +4,3 @@
           ls -la
           echo '--- seeds.txt ---'; sed -n '1,50p' seeds.txt || true
           echo '--- hatena_collect.py (head) ---'; sed -n '1,30p' hatena_collect.py || true
-
-      - name: Install deps
-        run: pip install requests
