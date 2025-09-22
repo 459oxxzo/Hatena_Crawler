@@ -10,3 +10,9 @@ jobs:
           python-version: '3.11'
       - name: Ping
         run: echo "hello"
+      - name: Debug: list files
+        run: |
+          pwd
+          ls -la
+          echo '--- seeds.txt ---'
+          sed -n '1,50p' seeds.txt || true
